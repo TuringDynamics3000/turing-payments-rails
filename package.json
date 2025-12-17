@@ -1,0 +1,70 @@
+{
+  "name": "@turingdynamics/payments-rails",
+  "version": "0.1.0",
+  "description": "Canonical payments orchestration, lifecycle enforcement, and evidence generation for multi-rail financial systems",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./npp": {
+      "types": "./dist/domain/npp/index.d.ts",
+      "import": "./dist/domain/npp/index.js"
+    },
+    "./becs": {
+      "types": "./dist/domain/becs/index.d.ts",
+      "import": "./dist/domain/becs/index.js"
+    },
+    "./rtgs": {
+      "types": "./dist/domain/rtgs/index.d.ts",
+      "import": "./dist/domain/rtgs/index.js"
+    },
+    "./cards": {
+      "types": "./dist/domain/cards/index.d.ts",
+      "import": "./dist/domain/cards/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:load": "node tests/load/npp-load-test.mjs && node tests/load/cards-load-test.mjs",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "payments",
+    "rails",
+    "orchestration",
+    "npp",
+    "becs",
+    "rtgs",
+    "cards",
+    "event-sourcing",
+    "deterministic-replay",
+    "financial-infrastructure"
+  ],
+  "author": "TuringDynamics",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TuringDynamics3000/turing-payments-rails.git"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.0.0"
+  },
+  "peerDependencies": {},
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ]
+}
