@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://turing.com/schemas/command_rejected.v1.json",
+  "allOf": [
+    { "$ref": "envelope.v1.json" },
+    {
+      "properties": {
+        "event_type": { "const": "CommandRejected" },
+        "payload": {
+          "type": "object",
+          "required": [
+            "command_id",
+            "reason_code",
+            "reason_message",
+            "entity_type"
+          ],
+          "properties": {
+            "command_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "ID of the rejected command"
+            },
+            "entity_type": {
+              "type": "string",
+              "enum": ["PAYMENT", "LOAN"],
+              "description": "Type of entity the command was targeting"
+            },
+            "entity_id": {
+              "type": ["string", "null"],
+              "description": "Entity ID if available (null if command failed before entity creation)"
+            },
+            "reason_code": {
+              "type": "string",
+              "enum": [
+                "INVALID_SCHEMA",
+                "INVARIANT_VIOLATION",
+                "POLICY_DENIED",
+                "LIFECYCLE_MISMATCH",
+                "DUPLICATE_COMMAND"
+              ],
+              "description": "Machine-readable rejection reason"
+            },
+            "reason_message": {
+              "type": "string",
+              "description": "Human-readable rejection reason"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    }
+  ]
+}
