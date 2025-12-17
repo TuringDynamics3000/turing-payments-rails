@@ -1,0 +1,210 @@
+openapi: 3.0.3
+info:
+  title: Turing Payments Rails – Command API
+  version: 1.0.0
+  description: |
+    Command API for turing-payments-rails orchestration layer.
+    
+    Commands are intent, not facts.
+    Commands are idempotent by command_id.
+    Commands may be rejected.
+    Events are the response, not command success.
+    
+    All outcomes are emitted as events to TuringCore-v3.
+
+servers:
+  - url: https://payments-rails.internal
+    description: Internal payments orchestration service
+
+paths:
+  /commands/payments/initiate:
+    post:
+      summary: Initiate a payment
+      description: |
+        Request to initiate a new payment on a specific rail.
+        
+        The command is idempotent by command_id.
+        Success/failure is communicated via events (PaymentInitiated or CommandRejected).
+      operationId: initiatePayment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InitiatePaymentCommand"
+      responses:
+        "202":
+          description: Command accepted for processing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    const: accepted
+                  command_id:
+                    type: string
+                    format: uuid
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /commands/payments/retry:
+    post:
+      summary: Retry a failed payment
+      description: |
+        Request to retry a payment that previously failed.
+        
+        The command is idempotent by command_id.
+        Only applicable to payments in FAILED state.
+      operationId: retryPayment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RetryPaymentCommand"
+      responses:
+        "202":
+          description: Command accepted for processing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    const: accepted
+                  command_id:
+                    type: string
+                    format: uuid
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /commands/payments/cancel:
+    post:
+      summary: Cancel a payment
+      description: |
+        Request to cancel a payment that has not yet settled.
+        
+        The command is idempotent by command_id.
+        Only applicable to payments in non-terminal states.
+      operationId: cancelPayment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CancelPaymentCommand"
+      responses:
+        "202":
+          description: Command accepted for processing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    const: accepted
+                  command_id:
+                    type: string
+                    format: uuid
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    InitiatePaymentCommand:
+      type: object
+      required:
+        - command_id
+        - payment_id
+        - rail
+        - amount
+        - currency
+        - source_account_id
+        - destination
+      properties:
+        command_id:
+          type: string
+          format: uuid
+          description: Idempotency key for this command
+        payment_id:
+          type: string
+          description: Unique payment identifier
+        rail:
+          type: string
+          enum: [NPP, BECS, RTGS, CARDS]
+          description: Payment rail to use
+        amount:
+          type: number
+          exclusiveMinimum: 0
+          description: Payment amount (positive number)
+        currency:
+          type: string
+          const: AUD
+          description: Currency code (currently only AUD supported)
+        source_account_id:
+          type: string
+          description: Source account identifier
+        destination:
+          type: object
+          required: [type, value]
+          properties:
+            type:
+              type: string
+              enum: [ACCOUNT, PAYID, CARD]
+              description: Destination type
+            value:
+              type: string
+              description: Destination identifier (account number, PayID, or card token)
+
+    RetryPaymentCommand:
+      type: object
+      required: [command_id, payment_id]
+      properties:
+        command_id:
+          type: string
+          format: uuid
+          description: Idempotency key for this command
+        payment_id:
+          type: string
+          description: Payment identifier to retry
+
+    CancelPaymentCommand:
+      type: object
+      required: [command_id, payment_id, reason]
+      properties:
+        command_id:
+          type: string
+          format: uuid
+          description: Idempotency key for this command
+        payment_id:
+          type: string
+          description: Payment identifier to cancel
+        reason:
+          type: string
+          description: Reason for cancellation
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        details:
+          type: object
+          description: Additional error details
