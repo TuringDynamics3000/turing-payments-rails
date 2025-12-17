@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://turingdynamics.com/schemas/payment-initiated.v1.json",
+  "title": "PaymentInitiated Event",
+  "description": "Emitted when a payment is first created (no ledger action)",
+  "type": "object",
+  "required": ["event_id", "event_type", "event_version", "occurred_at", "payload"],
+  "properties": {
+    "event_type": {
+      "const": "PaymentInitiated"
+    },
+    "event_version": {
+      "const": 1
+    },
+    "payload": {
+      "type": "object",
+      "required": ["payment_id", "rail", "amount", "currency", "source_account_id", "destination"],
+      "properties": {
+        "payment_id": {
+          "type": "string",
+          "description": "Unique payment identifier"
+        },
+        "rail": {
+          "type": "string",
+          "enum": ["NPP", "BECS", "RTGS", "CARDS"],
+          "description": "Payment rail"
+        },
+        "amount": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Payment amount"
+        },
+        "currency": {
+          "type": "string",
+          "const": "AUD",
+          "description": "Currency code"
+        },
+        "source_account_id": {
+          "type": "string",
+          "description": "Source account identifier"
+        },
+        "destination": {
+          "type": "object",
+          "required": ["type", "value"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["ACCOUNT", "PAYID", "CARD"],
+              "description": "Destination type"
+            },
+            "value": {
+              "type": "string",
+              "description": "Destination identifier"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

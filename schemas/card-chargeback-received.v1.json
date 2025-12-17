@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://turingdynamics.com/schemas/card-chargeback-received.v1.json",
+  "title": "CardChargebackReceived Event",
+  "description": "Emitted when a card chargeback is received (requires ledger reversal)",
+  "type": "object",
+  "required": ["event_id", "event_type", "event_version", "occurred_at", "payload"],
+  "properties": {
+    "event_type": {
+      "const": "CardChargebackReceived"
+    },
+    "event_version": {
+      "const": 1
+    },
+    "payload": {
+      "type": "object",
+      "required": ["payment_id", "reason_code", "received_at"],
+      "properties": {
+        "payment_id": {
+          "type": "string",
+          "description": "Unique payment identifier"
+        },
+        "reason_code": {
+          "type": "string",
+          "description": "Chargeback reason code from card network"
+        },
+        "received_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO-8601 timestamp when chargeback was received"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://turingdynamics.com/schemas/payment-reversed.v1.json",
+  "title": "PaymentReversed Event",
+  "description": "Emitted when a settled payment is reversed (requires ledger reversal posting)",
+  "type": "object",
+  "required": ["event_id", "event_type", "event_version", "occurred_at", "payload"],
+  "properties": {
+    "event_type": {
+      "const": "PaymentReversed"
+    },
+    "event_version": {
+      "const": 1
+    },
+    "payload": {
+      "type": "object",
+      "required": ["payment_id", "original_settlement_event_id", "reversed_at", "ledger_posting"],
+      "properties": {
+        "payment_id": {
+          "type": "string",
+          "description": "Unique payment identifier"
+        },
+        "original_settlement_event_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Event ID of the original PaymentSettled event"
+        },
+        "reversed_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO-8601 timestamp of reversal"
+        },
+        "ledger_posting": {
+          "type": "object",
+          "required": ["debit_account_id", "credit_account_id", "amount"],
+          "properties": {
+            "debit_account_id": {
+              "type": "string",
+              "description": "Account to debit (opposite of original)"
+            },
+            "credit_account_id": {
+              "type": "string",
+              "description": "Account to credit (opposite of original)"
+            },
+            "amount": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Amount to reverse (positive number)"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

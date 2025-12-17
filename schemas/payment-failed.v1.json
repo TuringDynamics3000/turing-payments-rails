@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://turingdynamics.com/schemas/payment-failed.v1.json",
+  "title": "PaymentFailed Event",
+  "description": "Emitted when a payment fails (no ledger action, may release holds)",
+  "type": "object",
+  "required": ["event_id", "event_type", "event_version", "occurred_at", "payload"],
+  "properties": {
+    "event_type": {
+      "const": "PaymentFailed"
+    },
+    "event_version": {
+      "const": 1
+    },
+    "payload": {
+      "type": "object",
+      "required": ["payment_id", "failure_code", "failure_reason"],
+      "properties": {
+        "payment_id": {
+          "type": "string",
+          "description": "Unique payment identifier"
+        },
+        "attempt_id": {
+          "type": ["string", "null"],
+          "description": "Attempt that failed (null if no attempt was made)"
+        },
+        "failure_code": {
+          "type": "string",
+          "description": "Machine-readable failure code"
+        },
+        "failure_reason": {
+          "type": "string",
+          "description": "Human-readable failure reason"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
