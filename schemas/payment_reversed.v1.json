@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://turing.com/schemas/payment_reversed.v1.json",
+  "allOf": [
+    { "$ref": "envelope.v1.json" },
+    {
+      "properties": {
+        "event_type": { "const": "PaymentReversed" },
+        "payload": {
+          "type": "object",
+          "required": [
+            "payment_id",
+            "original_settlement_event_id",
+            "reversed_at",
+            "ledger_posting"
+          ],
+          "properties": {
+            "payment_id": { "type": "string" },
+            "original_settlement_event_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "reversed_at": { "type": "string", "format": "date-time" },
+            "ledger_posting": {
+              "type": "object",
+              "required": [
+                "debit_account_id",
+                "credit_account_id",
+                "amount"
+              ],
+              "properties": {
+                "debit_account_id": { "type": "string" },
+                "credit_account_id": { "type": "string" },
+                "amount": { "type": "number", "exclusiveMinimum": 0 }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

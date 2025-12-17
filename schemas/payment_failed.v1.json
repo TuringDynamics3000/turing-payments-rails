@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://turing.com/schemas/payment_failed.v1.json",
+  "allOf": [
+    { "$ref": "envelope.v1.json" },
+    {
+      "properties": {
+        "event_type": { "const": "PaymentFailed" },
+        "payload": {
+          "type": "object",
+          "required": ["payment_id", "failure_code", "failure_reason"],
+          "properties": {
+            "payment_id": { "type": "string" },
+            "attempt_id": { "type": ["string", "null"] },
+            "failure_code": { "type": "string" },
+            "failure_reason": { "type": "string" }
+          }
+        }
+      }
+    }
+  ]
+}

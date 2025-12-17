@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://turing.com/schemas/envelope.v1.json",
+  "type": "object",
+  "required": [
+    "event_id",
+    "event_type",
+    "event_version",
+    "occurred_at",
+    "producer",
+    "correlation_id",
+    "entity_type",
+    "entity_id",
+    "payload"
+  ],
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "event_type": { "type": "string" },
+    "event_version": { "type": "integer", "const": 1 },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "producer": { "type": "string", "const": "turing-payments-rails" },
+    "correlation_id": { "type": "string", "format": "uuid" },
+    "causation_id": { "type": ["string", "null"], "format": "uuid" },
+    "entity_type": { "type": "string", "const": "PAYMENT" },
+    "entity_id": { "type": "string" },
+    "payload": { "type": "object" }
+  },
+  "additionalProperties": false
+}

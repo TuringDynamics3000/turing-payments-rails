@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://turing.com/schemas/card_authorised.v1.json",
+  "allOf": [
+    { "$ref": "envelope.v1.json" },
+    {
+      "properties": {
+        "event_type": { "const": "CardAuthorised" },
+        "payload": {
+          "type": "object",
+          "required": ["payment_id", "auth_code", "amount", "expires_at"],
+          "properties": {
+            "payment_id": { "type": "string" },
+            "auth_code": { "type": "string" },
+            "amount": { "type": "number", "exclusiveMinimum": 0 },
+            "expires_at": { "type": "string", "format": "date-time" }
+          }
+        }
+      }
+    }
+  ]
+}

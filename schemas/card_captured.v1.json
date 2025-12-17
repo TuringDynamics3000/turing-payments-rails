@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://turing.com/schemas/card_captured.v1.json",
+  "allOf": [
+    { "$ref": "envelope.v1.json" },
+    {
+      "properties": {
+        "event_type": { "const": "CardCaptured" },
+        "payload": {
+          "type": "object",
+          "required": ["payment_id", "capture_amount"],
+          "properties": {
+            "payment_id": { "type": "string" },
+            "capture_amount": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        }
+      }
+    }
+  ]
+}

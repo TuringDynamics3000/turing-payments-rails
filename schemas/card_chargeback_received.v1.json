@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://turing.com/schemas/card_chargeback_received.v1.json",
+  "allOf": [
+    { "$ref": "envelope.v1.json" },
+    {
+      "properties": {
+        "event_type": { "const": "CardChargebackReceived" },
+        "payload": {
+          "type": "object",
+          "required": ["payment_id", "reason_code", "received_at"],
+          "properties": {
+            "payment_id": { "type": "string" },
+            "reason_code": { "type": "string" },
+            "received_at": { "type": "string", "format": "date-time" }
+          }
+        }
+      }
+    }
+  ]
+}

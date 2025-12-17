@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://turing.com/schemas/payment_settled.v1.json",
+  "allOf": [
+    { "$ref": "envelope.v1.json" },
+    {
+      "properties": {
+        "event_type": { "const": "PaymentSettled" },
+        "payload": {
+          "type": "object",
+          "required": [
+            "payment_id",
+            "attempt_id",
+            "external_ref",
+            "settled_at",
+            "ledger_posting"
+          ],
+          "properties": {
+            "payment_id": { "type": "string" },
+            "attempt_id": { "type": "string" },
+            "external_ref": { "type": "string" },
+            "settled_at": { "type": "string", "format": "date-time" },
+            "ledger_posting": {
+              "type": "object",
+              "required": [
+                "debit_account_id",
+                "credit_account_id",
+                "amount"
+              ],
+              "properties": {
+                "debit_account_id": { "type": "string" },
+                "credit_account_id": { "type": "string" },
+                "amount": { "type": "number", "exclusiveMinimum": 0 }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://turing.com/schemas/payment_sent.v1.json",
+  "allOf": [
+    { "$ref": "envelope.v1.json" },
+    {
+      "properties": {
+        "event_type": { "const": "PaymentSent" },
+        "payload": {
+          "type": "object",
+          "required": ["payment_id", "attempt_id", "external_ref"],
+          "properties": {
+            "payment_id": { "type": "string" },
+            "attempt_id": { "type": "string" },
+            "external_ref": { "type": "string" }
+          }
+        }
+      }
+    }
+  ]
+}

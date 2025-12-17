@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://turing.com/schemas/payment_initiated.v1.json",
+  "allOf": [
+    { "$ref": "envelope.v1.json" },
+    {
+      "properties": {
+        "event_type": { "const": "PaymentInitiated" },
+        "payload": {
+          "type": "object",
+          "required": [
+            "payment_id",
+            "rail",
+            "amount",
+            "currency",
+            "source_account_id",
+            "destination"
+          ],
+          "properties": {
+            "payment_id": { "type": "string" },
+            "rail": {
+              "type": "string",
+              "enum": ["NPP", "BECS", "RTGS", "CARDS"]
+            },
+            "amount": { "type": "number", "exclusiveMinimum": 0 },
+            "currency": { "type": "string", "const": "AUD" },
+            "source_account_id": { "type": "string" },
+            "destination": {
+              "type": "object",
+              "required": ["type", "value"],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["ACCOUNT", "PAYID", "CARD"]
+                },
+                "value": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
